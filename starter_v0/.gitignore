@@ -6,3 +6,9 @@ __pycache__/
 .env.*
 !.env.example
 arxiv_papers/
+V1_RESULTS.md
+analyze_failures.py
+log.txt
+eval_*.txt
+runs/
+transcripts/
