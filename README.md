@@ -5,7 +5,7 @@
 | Member | MSSV | Main Responsibility |
 |---|---|---|
 | Vũ Văn Phong | 2A202601647 | Backend orchestration, Gemini provider, Vercel/ngrok integration |
-| Hà Duy Anh |  | React UI, chat experience, responsive layout |
+| Hà Duy Anh | 2A202601511 | React UI, chat experience, responsive layout |
 | Nguyễn Quang Vinh | 2A202601517 | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
 | Hoàng Lê Minh | 2A202601653 | Eval design, group cases, run analysis |
 | Phạm Sỹ Đức | 2A202601601 | Documentation, deployment guide, report evidence |
