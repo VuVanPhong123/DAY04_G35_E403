@@ -2,6 +2,17 @@
 
 Research Agent is a Gemini-powered tool-routing agent for web news, URL reading, Twitter/X signals, local company policy, arXiv discovery, arXiv PDF text extraction, and formatting.
 
+## Team Members
+
+| Member | MSSV | Main Responsibility |
+|---|---|---|
+| Vũ Văn Phong | 2A202601647 | Backend orchestration, Gemini provider, Vercel/ngrok integration |
+| Hà Duy Anh |  | React UI, chat experience, responsive layout |
+| Nguyễn Quang Vinh |  | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
+| Hà Lê Minh |  | Eval design, group cases, run analysis |
+| Phạm Sỹ Đức |  | Documentation, deployment guide, report evidence |
+| Đoàn Nhật Nam |  | QA, security review, transcript and smoke testing |
+
 ## Architecture
 
 ```text
@@ -82,12 +93,13 @@ Optional `.env`:
 
 ```env
 BACKEND_SHARED_SECRET=replace-with-a-local-secret
-ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403-git-main-vuvanphong123s-projects.vercel.app
 ```
 
-Run:
+Run locally:
 
 ```powershell
+$env:ALLOWED_ORIGINS="http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403-git-main-vuvanphong123s-projects.vercel.app"
 python -m uvicorn server:app --host 127.0.0.1 --port 8000
 ```
 
@@ -98,6 +110,7 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 ```
 
 If `BACKEND_SHARED_SECRET` is set, `POST /api/chat` requires `X-Internal-API-Key`.
+The UI first tries `POST /api/chat/stream` for SSE status updates and falls back to `POST /api/chat`.
 
 ## Ngrok
 
@@ -106,6 +119,12 @@ Do not put ngrok tokens in source code or Vercel.
 ```powershell
 ngrok config add-authtoken <REAL_TOKEN>
 ngrok http 8000
+```
+
+If `ngrok` is not on PATH, this local machine also has:
+
+```powershell
+& 'C:\Users\ADMIN\Personal_proj\chatbot\app\BE\venv\Lib\site-packages\pyngrok\bin\ngrok.exe' http 8000
 ```
 
 Copy the HTTPS forwarding URL and set it as Vercel `BACKEND_ORIGIN`.
@@ -162,4 +181,3 @@ npm run lint
 - RapidAPI schema change: update `tools/timeline/tool.py` or `tools/social_search/tool.py` item extraction.
 - Vercel function timeout: shorten backend tool loops or increase backend speed; Vercel proxy has a 90s abort.
 - Invalid Gemini model: run `scripts/preflight_provider.py --provider gemini --model <candidate>`.
-

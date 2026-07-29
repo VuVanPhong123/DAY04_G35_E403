@@ -1,0 +1,28 @@
+{
+  "transcript_id": "direct-ngrok-debug",
+  "session_id": "direct-ngrok-debug",
+  "created_at": "2026-07-29T04:20:36+00:00",
+  "turns": [
+    {
+      "started_at": "2026-07-29T04:20:23+00:00",
+      "ended_at": "2026-07-29T04:20:36+00:00",
+      "client": "2001:ee0:1a10:234f:119a:8180:fd4d:29ba",
+      "user": "Ban lam duoc gi?",
+      "status": "answered",
+      "assistant_text": "Tôi là một trợ lý nghiên cứu được thiết kế để hỗ trợ bạn tìm kiếm và tổng hợp thông tin một cách chính xác. Cụ thể, tôi có thể giúp bạn thực hiện các công việc sau:\n\n1.  **Tìm kiếm thông tin:**\n    *   Tra cứu tin tức, sự kiện hiện tại hoặc các thông tin công cộng trên web.\n    *   Tìm kiếm các bài báo khoa học, nghiên cứu mới nhất trên arXiv.\n    *   Theo dõi các thảo luận, xu hướng trên mạng xã hội (Twitter/X).\n    *   Xem cập nhật từ các tài khoản cụ thể trên mạng xã hội.\n\n2.  **Xử lý và tổng hợp:**\n    *   Đọc và tóm tắt nội dung từ các đường dẫn (URL) hoặc các bài báo khoa học (arXiv).\n    *   Tổng hợp thông tin từ nhiều nguồn khác nhau thành các định dạng báo cáo, danh sách hoặc tóm tắt ngắn gọn.\n\n3.  **Hỗ trợ công việc nội bộ:**\n    *   Tra cứu các chính sách, quy định nội bộ của công ty (về bảo mật dữ liệu, quy trình nghiên cứu, cách trích dẫn nguồn, v.v.).\n\n4.  **Tương tác:**\n    *   Hỗ trợ gửi thông tin lên Telegram (sau khi đã được bạn xác nhận rõ ràng).\n\n**Nguyên tắc làm việc của tôi:**\n*   **Chính xác và cẩn trọng:** Tôi luôn ưu tiên các nguồn tin cậy và tuân thủ các chính sách về trích dẫn nguồn.\n*   **An toàn:** Tôi không thực hiện các hành động như gửi tin nhắn hay đăng bài mà không có sự xác nhận rõ ràng từ bạn.\n*   **Tập trung:** Tôi sử dụng các công cụ chuyên biệt cho từng loại yêu cầu để đảm bảo kết quả tốt nhất.\n\nBạn có chủ đề nào cần nghiên cứu hoặc tìm hiểu ngay bây giờ không? Hãy cho tôi biết nhé!",
+      "tool_events": [],
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Tôi là một trợ lý nghiên cứu được thiết kế để hỗ trợ bạn tìm kiếm và tổng hợp thông tin một cách chính xác. Cụ thể, tôi có thể giúp bạn thực hiện các công việc sau:\n\n1.  **Tìm kiếm thông tin:**\n    *   Tra cứu tin tức, sự kiện hiện tại hoặc các thông tin công cộng trên web.\n    *   Tìm kiếm các bài báo khoa học, nghiên cứu mới nhất trên arXiv.\n    *   Theo dõi các thảo luận, xu hướng trên mạng xã hội (Twitter/X).\n    *   Xem cập nhật từ các tài khoản cụ thể trên mạng xã hội.\n\n2.  **Xử lý và tổng hợp:**\n    *   Đọc và tóm tắt nội dung từ các đường dẫn (URL) hoặc các bài báo khoa học (arXiv).\n    *   Tổng hợp thông tin từ nhiều nguồn khác nhau thành các định dạng báo cáo, danh sách hoặc tóm tắt ngắn gọn.\n\n3.  **Hỗ trợ công việc nội bộ:**\n    *   Tra cứu các chính sách, quy định nội bộ của công ty (về bảo mật dữ liệu, quy trình nghiên cứu, cách trích dẫn nguồn, v.v.).\n\n4.  **Tương tác:**\n    *   Hỗ trợ gửi thông tin lên Telegram (sau khi đã được bạn xác nhận rõ ràng).\n\n**Nguyên tắc làm việc của tôi:**\n*   **Chính xác và cẩn trọng:** Tôi luôn ưu tiên các nguồn tin cậy và tuân thủ các chính sách về trích dẫn nguồn.\n*   **An toàn:** Tôi không thực hiện các hành động như gửi tin nhắn hay đăng bài mà không có sự xác nhận rõ ràng từ bạn.\n*   **Tập trung:** Tôi sử dụng các công cụ chuyên biệt cho từng loại yêu cầu để đảm bảo kết quả tốt nhất.\n\nBạn có chủ đề nào cần nghiên cứu hoặc tìm hiểu ngay bây giờ không? Hãy cho tôi biết nhé!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ]
+    }
+  ],
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "source": "api",
+  "updated_at": "2026-07-29T04:20:36+00:00"
+}

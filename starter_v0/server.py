@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+import json
 import hmac
 import os
+from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Literal
 
 import anyio
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from agent_runtime import append_transcript_turn, client_safe_result, now_iso, run_model_tool_loop, sanitize_session_id
@@ -85,24 +88,7 @@ def load_runtime_config() -> tuple[str, list[dict]]:
     return system_prompt, tools
 
 
-@app.get("/health")
-def health() -> dict:
-    provider = make_provider("gemini")
-    return {
-        "status": "ok",
-        "provider": "gemini",
-        "model": getattr(provider, "selected_model", None) or getattr(provider, "default_model", None),
-        "tools": {
-            "gemini": env_status("GEMINI_API_KEY"),
-            "tavily": env_status("TAVILY_API_KEY"),
-            "firecrawl": env_status("FIRECRAWL_API_KEY"),
-            "rapidapi": env_status("RAPIDAPI_KEY"),
-        },
-    }
-
-
-@app.post("/api/chat")
-async def chat(request: Request, payload: ChatRequest, _: None = Depends(require_internal_secret)) -> dict:
+async def run_chat_request(request: Request, payload: ChatRequest) -> dict:
     session_id = sanitize_session_id(payload.session_id)
     system_prompt, tools = load_runtime_config()
     provider = make_provider("gemini")
@@ -156,3 +142,51 @@ async def chat(request: Request, payload: ChatRequest, _: None = Depends(require
         "tool_events": safe["tool_events"],
         "rounds": safe["rounds"],
     }
+
+
+def sse(event: str, data: dict) -> str:
+    payload = json.dumps(data, ensure_ascii=False)
+    return f"event: {event}\ndata: {payload}\n\n"
+
+
+@app.get("/health")
+def health() -> dict:
+    provider = make_provider("gemini")
+    return {
+        "status": "ok",
+        "provider": "gemini",
+        "model": getattr(provider, "selected_model", None) or getattr(provider, "default_model", None),
+        "tools": {
+            "gemini": env_status("GEMINI_API_KEY"),
+            "tavily": env_status("TAVILY_API_KEY"),
+            "firecrawl": env_status("FIRECRAWL_API_KEY"),
+            "rapidapi": env_status("RAPIDAPI_KEY"),
+        },
+    }
+
+
+@app.post("/api/chat")
+async def chat(request: Request, payload: ChatRequest, _: None = Depends(require_internal_secret)) -> dict:
+    return await run_chat_request(request, payload)
+
+
+@app.post("/api/chat/stream")
+async def chat_stream(request: Request, payload: ChatRequest, _: None = Depends(require_internal_secret)) -> StreamingResponse:
+    async def events() -> AsyncIterator[str]:
+        yield sse("status", {"message": "Đã nhận yêu cầu..."})
+        yield sse("status", {"message": "Đang gọi model và công cụ..."})
+        try:
+            result = await run_chat_request(request, payload)
+        except HTTPException as exc:
+            yield sse("error", {"status_code": exc.status_code, "detail": exc.detail})
+            return
+        except Exception as exc:
+            yield sse("error", {"status_code": 500, "detail": upstream_error_detail(exc)})
+            return
+        yield sse("final", result)
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )

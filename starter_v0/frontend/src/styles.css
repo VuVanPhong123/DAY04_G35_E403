@@ -161,6 +161,66 @@ button:disabled {
   margin-bottom: 6px;
 }
 
+.bubble.assistant {
+  white-space: normal;
+}
+
+.bubble.loading p::after {
+  content: "";
+  display: inline-block;
+  width: 1.4em;
+  text-align: left;
+  animation: dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% { content: ""; }
+  25% { content: "."; }
+  50% { content: ".."; }
+  75%, 100% { content: "..."; }
+}
+
+.markdown {
+  display: grid;
+  gap: 10px;
+  line-height: 1.55;
+}
+
+.markdown h3 {
+  margin: 10px 0 2px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.markdown h3:first-child {
+  margin-top: 0;
+}
+
+.markdown p {
+  margin: 0;
+}
+
+.markdown ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.markdown li {
+  padding-left: 2px;
+}
+
+.markdown a {
+  color: #145985;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
 .composer {
   display: grid;
   gap: 10px;
@@ -257,4 +317,3 @@ pre {
     max-width: 100%;
   }
 }
-
