@@ -8,7 +8,7 @@
 | Hà Duy Anh |  | React UI, chat experience, responsive layout |
 | Nguyễn Quang Vinh | 2A202601517 | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
 | Hoàng Lê Minh | 2A202601653 | Eval design, group cases, run analysis |
-| Phạm Sỹ Đức |  | Documentation, deployment guide, report evidence |
+| Phạm Sỹ Đức | 2A202601601 | Documentation, deployment guide, report evidence |
 | Đoàn Nhật Nam | 2A202601123 | QA, security review, transcript and smoke testing |
 
 ## Brief
