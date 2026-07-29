@@ -9,7 +9,7 @@
 | Nguyễn Quang Vinh |  | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
 | Hà Lê Minh |  | Eval design, group cases, run analysis |
 | Phạm Sỹ Đức |  | Documentation, deployment guide, report evidence |
-| Đoàn Nhật Nam |  | QA, security review, transcript and smoke testing |
+| Đoàn Nhật Nam | 2A202601123 | QA, security review, transcript and smoke testing |
 
 ## Brief
 
