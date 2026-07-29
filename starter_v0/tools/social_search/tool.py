@@ -8,6 +8,15 @@ import requests
 from tools._shared import TIMEOUT, err
 
 
+def _twitter_error(response: requests.Response) -> RuntimeError:
+    try:
+        message = response.json().get("message") or response.text
+    except Exception:
+        message = response.text
+    message = (message or response.reason or "Twitter API request failed").strip()
+    return RuntimeError(f"RapidAPI Twitter HTTP {response.status_code}: {message[:300]}")
+
+
 def _twitter_get(path: str, params: dict[str, Any]) -> dict[str, Any]:
     key = os.getenv("RAPIDAPI_KEY")
     host = os.getenv("RAPIDAPI_TWITTER_HOST", "twitter-api45.p.rapidapi.com")
@@ -19,7 +28,8 @@ def _twitter_get(path: str, params: dict[str, Any]) -> dict[str, Any]:
         headers={"x-rapidapi-key": key, "x-rapidapi-host": host},
         timeout=TIMEOUT,
     )
-    response.raise_for_status()
+    if not response.ok:
+        raise _twitter_error(response)
     return response.json()
 
 

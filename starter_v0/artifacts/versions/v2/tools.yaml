@@ -1,23 +1,23 @@
 tools:
   - name: clarify
-    description: "Ask the user for one truly missing value needed to continue. Use text for missing handle/URL. For any send/post/publish/Telegram intent without explicit confirmation, response_type must be yes_no, even if message content is also missing. Do not ask for Telegram content before yes/no confirmation."
+    description: "Ask the user for one missing value needed to continue, such as a Twitter/X handle, a URL, or yes/no confirmation for a write action. Use this instead of guessing."
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Clear question for the user."}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Always include this field. Use text only for missing handle/URL. Use yes_no for every send/post/publish/Telegram request that is not already explicitly confirmed. Never use text for an unconfirmed write action."}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Use text for missing handle/URL, yes_no for send/publish confirmation, choice for explicit options."}
         options: {type: array, default: [], items: {type: string}, description: "Choices when response_type is choice."}
       required: [question]
   - name: timeline
-    description: "Fetch recent tweets/posts from one specific Twitter/X account. Use for 'tweets of/from <person/account>'. screenname must not include @. Known mappings: Sam Altman=sama, Elon Musk=elonmusk, Andrej Karpathy=karpathy. If no account is known, use clarify."
+    description: "Fetch recent tweets/posts from one specific Twitter/X account. Use only when the user names a person/account or provides a handle. screenname must not include @. Known mappings: Sam Altman=sama, Elon Musk=elonmusk, Andrej Karpathy=karpathy."
     parameters:
       type: object
       properties:
         screenname: {type: string, default: "", description: "Account handle without @."}
-        limit: {type: integer, default: 5, description: "Number of posts requested; preserve explicit user limits and later corrections."}
+        limit: {type: integer, default: 5, description: "Number of posts requested; preserve explicit user limits."}
       required: [screenname]
   - name: social_search
-    description: "Search Twitter/X by topic or keyword. Use for 'what are people discussing/saying about <topic>' or social signals. Do not use for one account timeline. Use search_type=Top for popular/top/pho bien and Latest for latest/newest/moi nhat."
+    description: "Search Twitter/X by topic or keyword. Use for what people are discussing about a subject, not for one account timeline. Use search_type=Top for popular/top, Latest for newest/latest."
     parameters:
       type: object
       properties:
@@ -30,20 +30,20 @@ tools:
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Core subject only, e.g. AI, robotics, OpenAI. Do not append news/tin/today/timeframe words."}
+        query: {type: string, default: "", description: "Search query."}
         topic: {type: string, enum: [general, news], default: "general", description: "Use news for current news requests."}
         timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "day=today, week=this week, month=this month, year=this year."}
         max_results: {type: integer, default: 5, description: "Small result count unless user asks otherwise."}
       required: [query]
   - name: fetch
-    description: "Read one specific URL supplied by the user. Use instead of lookup when an exact link is present. If the user says this article/page/link without a URL, use clarify."
+    description: "Read one specific URL supplied by the user. Use instead of lookup when the request includes an exact link. If the user says this article/page without a URL, use clarify."
     parameters:
       type: object
       properties:
         url: {type: string, default: "", description: "Exact URL to read."}
       required: [url]
   - name: format
-    description: "Format already collected items into markdown. This tool never searches or fetches. Use only after source tools returned items or the user supplied structured items."
+    description: "Format already collected items into markdown. This tool does not search, fetch, or verify data. Only use after source tools have returned items or the user supplied structured items."
     parameters:
       type: object
       properties:
@@ -63,7 +63,7 @@ tools:
         headline: {type: string, default: "", description: "Optional headline."}
       required: [items, template]
   - name: send
-    description: "Send text to Telegram. External write action. Use only after explicit confirmation of the exact send/post action in the current conversation. If not confirmed, call clarify with response_type=yes_no. Never use for research-only requests."
+    description: "Send text to Telegram. This is an external write action. Use only when the user has explicitly confirmed the exact send/post action in the current conversation. Otherwise call clarify with response_type=yes_no."
     parameters:
       type: object
       properties:
@@ -71,16 +71,16 @@ tools:
         confirmed: {type: boolean, default: false, description: "Must be true only after explicit confirmation."}
       required: [text]
   - name: policy
-    description: "Search local company policy documents. Use for internal company rules about source citation, data privacy, external publishing, tool usage, and AI research workflow. Do not use web lookup for internal policy questions."
+    description: "Search local company policy documents. Use for internal rules about source citation, data privacy, publishing, tool usage, and research workflow."
     parameters:
       type: object
       properties:
         query: {type: string, default: "", description: "Policy question."}
-        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Choose the narrowest policy area. API keys/secrets/customer data/PII -> data_privacy; Telegram/publishing/approval -> external_publishing; citation/source quality/tweet-as-fact/arXiv citation -> source_citation; research workflow -> ai_research; tool selection/rate limits -> tool_usage."}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Choose the narrowest policy area."}
         top_k: {type: integer, default: 3, description: "Number of policy sections."}
       required: [query]
   - name: papers
-    description: "Search arXiv for papers/preprints by topic. Use for paper discovery, recent research, academic literature search, or 'find paper'. For new/recent papers use sort_by=submittedDate or lastUpdatedDate. Use paper_text instead for a specific arXiv ID/URL."
+    description: "Search arXiv for papers/preprints by topic. Use for paper discovery, recent research, or academic literature search. Do not use to read a specific arXiv ID; use paper_text for that."
     parameters:
       type: object
       properties:
@@ -94,6 +94,7 @@ tools:
       type: object
       properties:
         arxiv_url: {type: string, default: "", description: "arXiv ID or URL, e.g. 1706.03762."}
-        max_pages: {type: integer, default: 5, description: "Number of PDF pages to extract; preserve explicit page counts."}
+        max_pages: {type: integer, default: 5, description: "Number of PDF pages to extract."}
         max_chars: {type: integer, default: 8000, description: "Maximum extracted text characters."}
       required: [arxiv_url]
+

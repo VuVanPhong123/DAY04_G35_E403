@@ -1,7 +1,119 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "Team-authored eval set: exactly 10 cases, 5 single-turn query cases and 5 multi-turn turns cases.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_specific_url_fetch",
+      "phase": "B",
+      "suite": "group",
+      "query": "Doc dung URL nay va tom tat ngan: https://example.com/research-note",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://example.com/research-note"}}]},
+      "metadata": {"what_it_tests": "A specific URL should route to fetch, not broad web lookup."}
+    },
+    {
+      "id": "G02_month_news_limit",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tim 4 tin AI trong thang nay tren web.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "AI", "topic": "news", "timeframe": "month", "max_results": 4}}]},
+      "metadata": {"what_it_tests": "Extract timeframe=month and max_results=4 for public news lookup."}
+    },
+    {
+      "id": "G03_company_privacy_policy",
+      "phase": "B",
+      "suite": "group",
+      "query": "Theo policy cong ty, co duoc dua API key vao prompt model khong?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "policy", "args": {"policy_area": "data_privacy"}}]},
+      "metadata": {"what_it_tests": "Internal data privacy question should use company policy, not web."}
+    },
+    {
+      "id": "G04_arxiv_discovery",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tim 3 paper arXiv moi ve agent evaluation.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "papers", "args": {"query": "agent evaluation", "max_results": 3}}]},
+      "metadata": {"what_it_tests": "Paper discovery should use arXiv search with explicit result limit."}
+    },
+    {
+      "id": "G05_confirm_before_send",
+      "phase": "B",
+      "suite": "group",
+      "query": "Gui ban tin vua soan len Telegram giup minh.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "External send request without explicit confirmation should ask yes/no, not call send."}
+    },
+    {
+      "id": "G06_multiturn_carry_topic",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tim tin AI hom nay."},
+        {"role": "user", "content": "Con ve cybersecurity thi sao?"},
+        {"role": "user", "content": "Van la tin hom nay nhe."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "cybersecurity", "topic": "news", "timeframe": "day"}}]},
+      "metadata": {"what_it_tests": "Carry over news/timeframe while switching topic to cybersecurity."}
+    },
+    {
+      "id": "G07_multiturn_limit_correction",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Lay 8 tweet moi nhat cua Elon Musk."},
+        {"role": "user", "content": "Doi lai thanh 3 thoi."},
+        {"role": "user", "content": "Van dung tai khoan do."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "elonmusk", "limit": 3}}]},
+      "metadata": {"what_it_tests": "Carry account and apply later limit correction."}
+    },
+    {
+      "id": "G08_multiturn_social_to_web",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Moi nguoi dang noi gi ve OpenAI tren Twitter?"},
+        {"role": "user", "content": "Khong dung Twitter nua, chuyen sang web."},
+        {"role": "user", "content": "Tim tin tuc ve OpenAI."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "OpenAI", "topic": "news"}}]},
+      "metadata": {"what_it_tests": "Latest turn switches source from social search to web news lookup."}
+    },
+    {
+      "id": "G09_multiturn_url_after_clarify",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tom tat bai viet nay giup minh."},
+        {"role": "user", "content": "https://openai.com/research/"},
+        {"role": "user", "content": "Chi doc URL vua gui."}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://openai.com/research/"}}]},
+      "metadata": {"what_it_tests": "After missing URL is supplied in a later turn, use fetch with the provided URL."}
+    },
+    {
+      "id": "G10_multiturn_cancel_meta",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {"role": "user", "content": "Tim tin AI hom nay."},
+        {"role": "user", "content": "Thoi huy yeu cau do."},
+        {"role": "user", "content": "Bay gio chi noi ban lam duoc gi."}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true},
+      "metadata": {"what_it_tests": "Canceled prior research request should not trigger tools; answer the meta question directly."}
+    }
+  ]
 }
+

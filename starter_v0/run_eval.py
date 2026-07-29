@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -34,6 +35,8 @@ def load_cases(path: Path, phase: str) -> list[dict[str, Any]]:
     cases = data["cases"]
     cases = [case for case in cases if case["phase"] == phase]
     validate_case_failure_types(cases, path)
+    if data.get("dataset_role") == "group":
+        validate_group_cases(cases, path)
     return cases
 
 
@@ -47,6 +50,32 @@ def validate_case_failure_types(cases: list[dict[str, Any]], path: Path) -> None
         allowed = ", ".join(sorted(ALLOWED_CASE_FAILURE_TYPES))
         joined = "; ".join(invalid)
         raise ValueError(f"Invalid failure_type in {path}: {joined}. Allowed: {allowed}")
+
+
+def validate_group_cases(cases: list[dict[str, Any]], path: Path) -> None:
+    if len(cases) != 10:
+        raise ValueError(f"{path} must contain exactly 10 phase B cases; got {len(cases)}")
+    ids = [case.get("id") for case in cases]
+    if len(set(ids)) != len(ids):
+        raise ValueError(f"{path} contains duplicate case IDs")
+    single = [case for case in cases if "query" in case and "turns" not in case]
+    multi = [case for case in cases if "turns" in case]
+    if len(single) != 5 or len(multi) != 5:
+        raise ValueError(f"{path} must contain exactly 5 single-turn query cases and 5 multi-turn cases")
+    for case in cases:
+        expect = case.get("expect") or {}
+        has_tool_calls = bool(expect.get("tool_calls"))
+        has_no_tool = expect.get("no_tool") is True
+        if has_tool_calls == has_no_tool:
+            raise ValueError(f"{path} case {case.get('id')} must set exactly one of expect.tool_calls or expect.no_tool=true")
+        if not case.get("metadata", {}).get("what_it_tests"):
+            raise ValueError(f"{path} case {case.get('id')} missing metadata.what_it_tests")
+        if case in multi:
+            turns = case.get("turns") or []
+            if not (2 <= len(turns) <= 3):
+                raise ValueError(f"{path} case {case.get('id')} multi-turn cases should have 2-3 user turns")
+            if any(turn.get("role") != "user" or not turn.get("content") for turn in turns):
+                raise ValueError(f"{path} case {case.get('id')} turns must be user turns with content")
 
 
 def validate_expected_tools(cases: list[dict[str, Any]], declarations: list[dict[str, Any]], path: Path) -> None:
@@ -270,6 +299,7 @@ def main() -> None:
     parser.add_argument("--tools", type=Path, default=ARTIFACTS_DIR / "tools.yaml")
     parser.add_argument("--eval-cases", type=Path, default=DATA_DIR / "eval_base.json")
     parser.add_argument("--runs-dir", type=Path, default=ROOT / "runs")
+    parser.add_argument("--case-delay", type=float, default=0.0, help="Optional seconds to wait between live provider requests.")
     args = parser.parse_args()
 
     system_prompt = args.system_prompt.read_text(encoding="utf-8")
@@ -286,7 +316,9 @@ def main() -> None:
     openai_tools = to_openai_tools(tool_declarations)
 
     results: list[dict[str, Any]] = []
-    for case in cases:
+    for index, case in enumerate(cases):
+        if index and args.case_delay > 0:
+            time.sleep(args.case_delay)
         print(f"Running {case['id']}...", flush=True)
         agent = ResearchAgent(provider, system_prompt=system_prompt, tools=openai_tools, model=args.model)
         try:

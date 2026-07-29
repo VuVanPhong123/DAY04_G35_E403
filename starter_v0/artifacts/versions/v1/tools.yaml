@@ -1,0 +1,101 @@
+# v1 keeps the starter tool descriptions unchanged while the system prompt fixes routing.
+tools:
+  - name: clarify
+    description: "Gui mot cau hoi cho nguoi dung."
+    parameters:
+      type: object
+      properties:
+        question: {type: string, default: "", description: "Cau hoi"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kieu tra loi"}
+        options: {type: array, default: [], items: {type: string}, description: "Cac lua chon"}
+      required: [question]
+  - name: timeline
+    description: "Lay cac bai dang gan day."
+    parameters:
+      type: object
+      properties:
+        screenname: {type: string, default: "", description: "Ten tai khoan"}
+        limit: {type: integer, default: 5, description: "So luong"}
+      required: [screenname]
+  - name: social_search
+    description: "Tim tren mang xa hoi."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Tu khoa"}
+        search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cach sap xep"}
+        limit: {type: integer, default: 5, description: "So luong"}
+      required: [query]
+  - name: lookup
+    description: "Tra cuu thong tin tren internet."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Truy van"}
+        topic: {type: string, enum: [general, news], default: "general", description: "Phan loai"}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoang thoi gian"}
+        max_results: {type: integer, default: 5, description: "So ket qua"}
+      required: [query]
+  - name: fetch
+    description: "Lay noi dung tu mot dia chi."
+    parameters:
+      type: object
+      properties:
+        url: {type: string, default: "", description: "Dia chi"}
+      required: [url]
+  - name: format
+    description: "Trinh bay du lieu da co thanh van ban."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          default: []
+          description: "Danh sach item"
+          items:
+            type: object
+            properties:
+              title: {type: string}
+              url: {type: string}
+              source: {type: string}
+              summary: {type: string}
+              section: {type: string}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuon"}
+        headline: {type: string, default: "", description: "Tieu de"}
+      required: [items, template]
+  - name: send
+    description: "Gui mot doan van ban di."
+    parameters:
+      type: object
+      properties:
+        text: {type: string, default: "", description: "Noi dung"}
+        confirmed: {type: boolean, default: false, description: "Co xac nhan"}
+      required: [text]
+  - name: policy
+    description: "Tim trong tai lieu noi bo."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Truy van"}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhom"}
+        top_k: {type: integer, default: 3, description: "So muc"}
+      required: [query]
+  - name: papers
+    description: "Tim bai bao khoa hoc."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, default: "", description: "Tu khoa"}
+        max_results: {type: integer, default: 5, description: "So luong"}
+        sort_by: {type: string, enum: [relevance, lastUpdatedDate, submittedDate], default: "relevance", description: "Sap xep"}
+      required: [query]
+  - name: paper_text
+    description: "Lay noi dung text cua mot bai bao."
+    parameters:
+      type: object
+      properties:
+        arxiv_url: {type: string, default: "", description: "ID hoac dia chi"}
+        max_pages: {type: integer, default: 5, description: "So trang"}
+        max_chars: {type: integer, default: 8000, description: "So ky tu"}
+      required: [arxiv_url]
+
