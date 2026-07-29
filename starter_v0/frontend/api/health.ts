@@ -16,7 +16,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const upstream = await fetch(`${origin}/health`, { signal: controller.signal });
+    const upstream = await fetch(`${origin}/health`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' },
+      signal: controller.signal,
+    });
     const data = await upstream.json().catch(() => ({}));
     return sendJson(res, 200, { status: upstream.ok ? 'online' : 'offline', backend: data });
   } catch {
@@ -25,4 +28,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     clearTimeout(timeout);
   }
 }
-

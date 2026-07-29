@@ -47,6 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         ...(process.env.BACKEND_SHARED_SECRET ? { 'X-Internal-API-Key': process.env.BACKEND_SHARED_SECRET } : {}),
       },
       body: JSON.stringify(req.body),
@@ -66,4 +67,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     clearTimeout(timeout);
   }
 }
-
