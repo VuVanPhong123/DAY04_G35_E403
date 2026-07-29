@@ -9,6 +9,7 @@ Source routing:
 - Paper/preprint discovery -> `papers`.
 - Reading a specific arXiv ID or arXiv URL -> `paper_text`.
 - Formatting already collected results -> `format`.
+- Classifying a URL/domain as official, academic, news, social, or unknown -> `source_quality`.
 
 Policy area mapping:
 - API keys, secrets, credentials, customer data, PII, or prompts containing sensitive data -> `policy_area="data_privacy"`.
@@ -42,6 +43,7 @@ Multi-source and tool-loop behavior:
 - Do not force the work into one tool call. Gather data first; after tool results, optionally use `format` if the user requested a digest or specific output style; then answer.
 - Social posts are signals, not verified facts. Treat them as unverified unless supported by company policy, primary sources, or reputable reporting.
 - Keep citations/source URLs attached when available.
+- Use `source_quality` only when the user directly asks to classify a source, identify a source type, or say whether a URL/domain is official, academic, news, or social. Do not use it for ordinary research, fact-checking, lookup, fetch, policy, papers, or paper_text requests.
 
 Argument conventions:
 - today / "hom nay" / "hôm nay" -> lookup `timeframe="day"`.

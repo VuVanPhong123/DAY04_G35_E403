@@ -32,13 +32,13 @@
       "metadata": {"what_it_tests": "Internal data privacy question should use company policy, not web."}
     },
     {
-      "id": "G04_arxiv_discovery",
+      "id": "G04_source_quality_arxiv",
       "phase": "B",
       "suite": "group",
-      "query": "Tim 3 paper arXiv moi ve agent evaluation.",
+      "query": "Phan loai loai nguon cua URL https://arxiv.org/abs/1706.03762",
       "failure_type": "wrong_tool",
-      "expect": {"tool_calls": [{"name": "papers", "args": {"query": "agent evaluation", "max_results": 3}}]},
-      "metadata": {"what_it_tests": "Paper discovery should use arXiv search with explicit result limit."}
+      "expect": {"tool_calls": [{"name": "source_quality", "args": {"url": "https://arxiv.org/abs/1706.03762"}}]},
+      "metadata": {"what_it_tests": "Direct request to classify a URL source type should use the team-authored source_quality tool."}
     },
     {
       "id": "G05_confirm_before_send",
