@@ -1,4 +1,4 @@
-import { FormEvent, KeyboardEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import type { ChatMessage, ChatResponse, ToolEvent } from './types';
 
@@ -207,6 +207,8 @@ export default function App() {
   const [backendStatus, setBackendStatus] = useState('checking');
   const [loadingStep, setLoadingStep] = useState(0);
   const [streamStatus, setStreamStatus] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     sessionStorage.setItem('session_id', sessionId);
@@ -231,6 +233,16 @@ export default function App() {
     }, 1800);
     return () => window.clearInterval(timer);
   }, [loading]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [messages, loading, streamStatus]);
+
+  useEffect(() => {
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading, messages.length]);
 
   const sources = useMemo(() => {
     const fromAnswer = extractUrls(messages.filter((m) => m.role === 'assistant').map((m) => m.content).join('\n'));
@@ -264,7 +276,7 @@ export default function App() {
       setMessages([...nextMessages, { role: 'assistant', content: chat.answer || '(no answer)' }]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
-      setMessages(messages);
+      setMessages(nextMessages);
     } finally {
       setLoading(false);
     }
@@ -288,6 +300,8 @@ export default function App() {
     setMessages([]);
     setToolEvents([]);
     setError('');
+    setInput('');
+    setStreamStatus('');
     sessionStorage.setItem('session_id', next);
     sessionStorage.removeItem('messages');
   }
@@ -299,7 +313,9 @@ export default function App() {
           <h1>Research Agent</h1>
           <p>Trợ lý nghiên cứu dùng web, Twitter/X, URL, policy nội bộ và arXiv để tổng hợp câu trả lời kèm dấu vết công cụ.</p>
         </div>
-        <span className={`status ${backendStatus}`}>{backendStatus}</span>
+        <div className="topbar-actions">
+          <span className={`status ${backendStatus}`}>{backendStatus}</span>
+        </div>
       </header>
 
       <section className="workspace">
@@ -312,21 +328,45 @@ export default function App() {
         </aside>
 
         <section className="chat-panel">
-          <div className="messages">
-            {messages.length === 0 ? <div className="empty">Nhập một câu hỏi nghiên cứu để bắt đầu.</div> : null}
+          <div className="messages" role="log" aria-live="polite">
+            {messages.length === 0 ? (
+              <div className="empty-state">
+                <h2>Bắt đầu một cuộc nghiên cứu mới</h2>
+                <p>Đặt câu hỏi về web, Twitter/X, URL, policy nội bộ hoặc arXiv. Trợ lý sẽ trả lời kèm các dấu vết công cụ và nguồn tham khảo.</p>
+              </div>
+            ) : null}
             {messages.map((message, index) => (
               <article key={`${message.role}-${index}`} className={`bubble ${message.role}`}>
-                <span>{message.role === 'user' ? 'bạn' : 'trợ lý'}</span>
+                <div className="message-meta">
+                  <span>{message.role === 'user' ? 'Bạn' : 'Trợ lý'}</span>
+                </div>
                 {message.role === 'assistant' ? renderMarkdown(message.content) : <p>{message.content}</p>}
               </article>
             ))}
-            {loading ? <article className="bubble assistant loading"><span>trợ lý</span><p>{streamStatus || loadingSteps[loadingStep]}</p></article> : null}
+            {loading ? (
+              <article className="bubble assistant loading">
+                <div className="message-meta">
+                  <span>Trợ lý</span>
+                </div>
+                <p>{streamStatus || loadingSteps[loadingStep]}</p>
+              </article>
+            ) : null}
+            <div ref={messagesEndRef} />
           </div>
 
           {error ? <div className="error">{error}</div> : null}
 
           <form className="composer" onSubmit={onSubmit}>
-            <textarea value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} maxLength={4000} />
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              maxLength={4000}
+              placeholder="Đặt câu hỏi nghiên cứu của bạn..."
+              aria-label="Nhập câu hỏi cho trợ lý"
+            />
+            <div className="composer-hint">Nhấn Enter để gửi, Shift + Enter để xuống dòng.</div>
             <div className="actions">
               <button type="button" className="secondary" onClick={clearConversation} disabled={loading}>Xóa hội thoại</button>
               <button type="submit" disabled={loading || !input.trim()}>{loading ? 'Đang gửi' : 'Gửi'}</button>
