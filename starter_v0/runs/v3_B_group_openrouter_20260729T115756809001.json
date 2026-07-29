@@ -1,0 +1,789 @@
+{
+  "run_id": "v3_B_group_openrouter_20260729T115756809001",
+  "version": "v3",
+  "artifact_version": "v3+pcf939a562be5+t8c864310cd12",
+  "prompt_hash": "cf939a562be5483038f8faa448008ca4f1fb13e3df2dcc666ef231277c6ac01e",
+  "tools_hash": "8c864310cd128c177177c4655941adcebea693e2723002fd9445dd5674bf77de",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\lab_VIN\\DAY04_G35_E403\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\lab_VIN\\DAY04_G35_E403\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "eval_group",
+  "dataset_role": "Team 10 Custom Eval Cases",
+  "description": "5 single-turn and 5 multi-turn cases covering crypto_price, core routing, and edge cases.",
+  "generated_at": "2026-07-29T11:57:56",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 8,
+    "case_accuracy": 0.8,
+    "tool_routing_accuracy": 0.9,
+    "argument_accuracy": 0.8,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {
+      "wrong_tool": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 1,
+      "missing_tool_call": 1
+    }
+  },
+  "results": [
+    {
+      "id": "G01_crypto_price_usd",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng map 'ETH' thành 'ethereum' và gọi tool crypto_price với mặc định 'usd'."
+      },
+      "input": "Giá ETH hiện tại là bao nhiêu?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum",
+              "currency": "usd"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "currency: expected 'usd', got None"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "crypto_price",
+          "args": {
+            "coin_id": "ethereum"
+          },
+          "result": {
+            "coin_id": "ethereum",
+            "currency": "usd",
+            "price": 1901.53,
+            "status": "success"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_crypto_price_vnd",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng nhận diện đơn vị tiền tệ VND cho tool crypto_price."
+      },
+      "input": "Cho xin giá Solana tính bằng tiền Việt Nam",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "solana",
+              "currency": "vnd"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "solana",
+              "currency": "vnd"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "crypto_price",
+          "args": {
+            "coin_id": "solana",
+            "currency": "vnd"
+          },
+          "result": {
+            "coin_id": "solana",
+            "currency": "vnd",
+            "price": 1929738,
+            "status": "success"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_social_search_latest",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra social_search với search_type='Latest' theo yêu cầu."
+      },
+      "input": "Có ai đang bàn tán về iPhone 16 trên mạng xã hội không? Xem bài mới nhất nhé.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "iPhone 16",
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "iPhone 16",
+              "search_type": "Latest",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "iPhone 16",
+            "search_type": "Latest",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "query": "iPhone 16",
+            "search_type": "Latest",
+            "items": [
+              {
+                "title": "The complainant said he paid Rs. 138,526 in PTA taxes after his sister sent an iPhone 16 Plus from Canada in December 20",
+                "summary": "The complainant said he paid Rs. 138,526 in PTA taxes after his sister sent an iPhone 16 Plus from Canada in December 2024, but the phone was allegedly released on a forged authority letter.",
+                "url": "https://x.com/ProPakistaniBiz/status/2082329401262272913",
+                "source": "@ProPakistaniBiz",
+                "date": "Wed Jul 29 04:56:31 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "1"
+                }
+              },
+              {
+                "title": "モイ！iPhoneからキャス配信中 -なぜ暇になってしまった人の配信(　・᷄д・᷅ )",
+                "summary": "モイ！iPhoneからキャス配信中 -なぜ暇になってしまった人の配信(　・᷄д・᷅ )\nhttps://t.co/fpAphfHnZE",
+                "url": "https://x.com/GrytFo/status/2082329388780282216",
+                "source": "@GrytFo",
+                "date": "Wed Jul 29 04:56:28 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "2"
+                }
+              },
+              {
+                "title": "FBR has been asked to check courier imports nationwide after an iPhone 16 Plus was allegedly handed to another person de",
+                "summary": "FBR has been asked to check courier imports nationwide after an iPhone 16 Plus was allegedly handed to another person despite the rightful consignee paying Rs. 138,526 in PTA taxes. 🧵 https://t.co/r3myL274RL",
+                "url": "https://x.com/ProPakistaniPK/status/2082328139024220359",
+                "source": "@ProPakistaniPK",
+                "date": "Wed Jul 29 04:51:30 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "13"
+                }
+              },
+              {
+                "title": "@PLKisGOD Apple Intelligence isn't available on iPhone 13 because it requires at least 8GB of RAM and a newer processor.",
+                "summary": "@PLKisGOD Apple Intelligence isn't available on iPhone 13 because it requires at least 8GB of RAM and a newer processor. It only works on iPhone 15 Pro, 15 Pro Max, and the iPhone 16 series or newer.",
+                "url": "https://x.com/TechElyra/status/2082327771041472966",
+                "source": "@TechElyra",
+                "date": "Wed Jul 29 04:50:03 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 0,
+                  "views": "10"
+                }
+              },
+              {
+                "title": "GRAGG ˙⋆✮ ลดถึง 6 โมงเย็น (29/7)",
+                "summary": "GRAGG ˙⋆✮ ลดถึง 6 โมงเย็น (29/7)\n\nเคส MAGSAFE LAYERS FRAME PHONE CASE - BLOOM APPLE\n\n📱 iPhone 15/16/17 series/ Galaxy S25 / S26 series\n\n✈️ ส่งแอร์ : 1,290฿ ส่ง50/70฿\n\n❗️ไม่พร้อมส่ง❗️\n\n#LeeNaGyoung #LEENAGYUNG\n#fromis_9 #fromis_9 https://t.co/3JymB5TOPv",
+                "url": "https://x.com/dressmyfav/status/2082327715231981976",
+                "source": "@dressmyfav",
+                "date": "Wed Jul 29 04:49:49 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1,
+                  "views": "17"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_clarify_missing_coin",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có hỏi lại khi người dùng hỏi giá crypto chung chung mà không nêu rõ đồng nào."
+      },
+      "input": "Giá tiền ảo hôm nay thế nào?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "bitcoin",
+              "currency": "usd"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call crypto_price"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "crypto_price",
+          "args": {
+            "coin_id": "bitcoin",
+            "currency": "usd"
+          },
+          "result": {
+            "coin_id": "bitcoin",
+            "currency": "usd",
+            "price": 63852,
+            "status": "success"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_out_of_scope_cooking",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng từ chối dùng tool khi truy vấn ngoài phạm vi (công thức nấu ăn)."
+      },
+      "input": "Làm thế nào để nấu món phở bò ngon?",
+      "expect": {
+        "no_tool": true
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Để nấu món phở bò ngon, bạn cần chuẩn bị các nguyên liệu và thực hiện theo các bước sau:\n\n### Nguyên liệu:\n1. **Nước dùng:**\n   - Xương bò (xương ống hoặc xương đuôi)\n   - Hành tây\n   - Gừng\n   - Gia vị: quế, hồi, đinh hương, tiêu, muối, đường\n\n2. **Thịt bò:**\n   - Thịt bò tái (thịt bò thăn hoặc bắp bò)\n   - Thịt bò chín (nếu thích)\n\n3. **Bánh phở:**\n   - Bánh phở tươi hoặc khô\n\n4. **Rau sống và gia vị:**\n   - Húng quế, ngò gai, giá đỗ, chanh, ớt tươi, tương đen, tương ớt\n\n### Cách làm:\n1. **Nấu nước dùng:**\n   - Rửa sạch xương bò, sau đó cho vào nồi nước sôi khoảng 5-10 phút để loại bỏ tạp chất. Sau đó, vớt xương ra và rửa lại.\n   - Cho xương vào nồi lớn, thêm nước và đun sôi. Hạ lửa nhỏ và hầm trong khoảng 3-4 giờ để nước dùng ngọt và trong.\n   - Nướng hành tây và gừng trên lửa cho đến khi có mùi thơm, sau đó cho vào nồi nước dùng cùng với các gia vị (quế, hồi, đinh hương, tiêu, muối, đường). Hầm thêm 1-2 giờ nữa.\n\n2. **Chuẩn bị thịt bò:**\n   - Thịt bò tái có thể thái mỏng và ướp với một chút muối và tiêu.\n   - Nếu bạn muốn có thịt bò chín, có thể luộc hoặc hầm thịt bò cho đến khi chín mềm, sau đó thái lát.\n\n3. **Nấu bánh phở:**\n   - Nếu sử dụng bánh phở khô, hãy ngâm trong nước nóng cho mềm. Nếu sử dụng bánh phở tươi, chỉ cần trụng qua nước sôi.\n\n4. **Hoàn thành món phở:**\n   - Cho bánh phở vào bát, thêm thịt bò tái và thịt bò chín (nếu có).\n   - Rót nước dùng nóng lên trên, trang trí với rau sống, húng quế, ngò gai, giá đỗ, chanh và ớt tươi.\n\n5. **Thưởng thức:**\n   - Dùng kèm với tương đen và tương ớt theo khẩu vị.\n\nChúc bạn thành công và có một bát phở bò ngon miệng!",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "G06_multi_clarify_crypto",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Cung cấp thông tin sau khi clarify để gọi crypto_price."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Giá coin giờ sao rồi?"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn muốn xem giá của đồng tiền cụ thể nào (ví dụ: Bitcoin, Ethereum)?"
+        },
+        {
+          "role": "user",
+          "content": "Bitcoin nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "bitcoin"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "bitcoin"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "crypto_price",
+          "args": {
+            "coin_id": "bitcoin"
+          },
+          "result": {
+            "coin_id": "bitcoin",
+            "currency": "usd",
+            "price": 63857,
+            "status": "success"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_multi_carryover_topic",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Carryover topic='news' và timeframe='month' từ turn trước sang truy vấn mới."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin tức AI tháng này có gì hot?"
+        },
+        {
+          "role": "user",
+          "content": "Tập trung vào mảng self-driving cars đi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "self-driving cars",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "self-driving cars",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "self-driving cars",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "self-driving cars",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Driverless cars are driving change beyond the roadways | KERA News",
+                "url": "https://www.keranews.org/news/2026-07-16/driverless-cars-autonomous-vehicles",
+                "source": "keranews.org",
+                "summary": "Unlike human drivers, autonomous cars can communicate with one another, allowing them to maintain consistent speeds and eliminate the stop-and-go traffic that often appears without an obvious cause. Researchers refer to those slowdowns as \"flow breakdowns,\" the phantom traffic jams that ripple backward even when there is no crash ahead.\n\nPlus, fewer accidents caused by human error could increase the number of vehicles existing highways can safely accommodate. [...] Related Content\n\n A Waymo self-driving car operating on Feb. 19, 2026.\n\n  News\n\n  The rise of autonomous vehicles in North Texas\n Cars travel during rush hour on US-75 in Dallas.\n\n  Transportation\n\n  Avride under investigation for self-driving taxi crashes\n [](\n\n  Texas News\n\n  Waymo expands ride-hailing services to Dallas, Houston [...] © 2026 KERA News\n\n\n\nNPR for North Texas\n\nDonate\n\nPlay Live Radio\n\nNext Up:\n\n0:00\n\n0:00\n\n0:00 0:00\n\nAvailable On Air Stations\n\nNews\n\n# Driverless cars are driving change beyond the roadways\n\nKERA | By Ron Corning\n\nPublished July 16, 2026 at 5:30 AM CDT\n\n Facebook\n Twitter\n LinkedIn\n Email\n\nA Waymo self-driving car operating on Feb. 19, 2026. \n\nMichael Adkison\n\n/\n\nHouston Public Media\n\nA Waymo self-driving car operating on Feb. 19, 2026.\n\n### Could driverless cars end traffic jams?",
+                "score": 0.7135319
+              },
+              {
+                "title": "Self-Driving Cars with Levelling Up Autonomy | IDTechEx Research Article",
+                "url": "https://www.idtechex.com/en/research-article/self-driving-cars-with-levelling-up-autonomy/35085",
+                "source": "idtechex.com",
+                "summary": "Jul 28, 2026 Lily-Rose Schuett\n\nA car is driving itself down a road. \n\nSelf-driving cars may have once been an imagined thing of the future, but with advancing technologies and systems, from radar to ADAS, autonomy is already levelling up, and level 3 vehicles and robotaxis can prove it. IDTechEx's portfolio of Robotics & Autonomy Research Reports and Subscriptions covers the latest developments within the autonomy for automotives sector.\n\nADAS and autonomy levels [...] Autonomous driving encompasses multiple technologies which all work alongside each other to create a wider system. These include a network of sensors, including radar and cameras, artificial intelligence, in-cabin monitoring, navigation and communication, and vehicle controls, each with their own roles to play in both vehicle autonomy and advanced driver assistance systems (ADAS). ADAS made an entrance when the first levels of autonomy came about, providing technologies to keep passengers safe [...] Robotaxis can allow for passengers to be transported around busy cities by driverless vehicles, showcasing the success of recent developments in robotics and autonomy globally.",
+                "score": 0.6894943
+              },
+              {
+                "title": "Waymo's Self-Driving Cars Crash Less Often Than Human Drivers: Study",
+                "url": "https://www.thedrive.com/news/waymos-self-driving-cars-crash-less-often-than-human-drivers-study",
+                "source": "thedrive.com",
+                "summary": "Since Waymo arrived on the public stage as Google’s self-titled autonomous-driving project almost 20 years ago, the promise that self-driving cars would dramatically curtail crashes has remained just that. A handful of companies operate autonomous ride-hailing services in some cities (San Francisco is downright lousy with autonomous cars), but high-profile mishaps show how elusive real progress is. Yet Waymo may be heading in the right direction, according to the Insurance Institute for Highway [...] Researchers concluded that only 22% of the 736 autonomous-car crashes reported during the period studied were likely “police-reportable.” Of that total, 89 involved Waymo vehicles (the highest for a single operator), but only 64 of those were in autonomous mode. That’s not a very big dataset, and the complex process of getting to it shows how difficult it is to make any real conclusions about the safety of self-driving cars. [...] But as the IIHS explains in an accompanying press release, getting any meaningful comparison between human and autonomous driving wasn’t easy. While companies are required to report crashes involving self-driving cars to the National Highway Traffic Safety Administration (NHTSA) and the State of California, they aren’t required to report the mileage these vehicles cover, or how much is actually done in autonomous mode. That makes it impossible to know how common self-driving car crashes really",
+                "score": 0.6747586
+              },
+              {
+                "title": "Zoox recalls self-driving cars because they may not detect smoke",
+                "url": "https://www.reuters.com/world/zoox-recalls-self-driving-cars-because-they-may-not-detect-smoke-2026-07-17",
+                "source": "reuters.com",
+                "summary": "Other videos have shown Waymo vehicles blocking an ambulance and driving through an active police scene.\n\nBoth NHTSA ⁠and ​the National Transportation Safety Board are investigating separate ​incidents involving Waymo self-driving vehicles, including vehicles passing stopped school buses with their lights activated in violation ​of Texas state law.\n\nReporting by David Shepardson; Editing by Susan Fenton and Chizu Nomiyama\n\nOur Standards: The Thomson Reuters Trust Principles., opens new tab [...] Last week, the ‌top U.S. auto safety official said self-driving car companies must quickly address a \"clear pattern\" of driverless vehicles interfering with law enforcement and other first responders that had raised significant safety concerns.\n\nThe Reuters Daily Briefing newsletter provides all the news you need to start your day. Sign up here.\n\nAdvertisement · Scroll to continue\n\nReport AdImage 4 [...] Skip to main content\n\nReport AdImage 2\n\nExclusive news, data and analytics for financial market professionals Learn more about Refinitiv\n\n - Amazon.com (AMZN.O), opens new tab self-driving car unit Zoox said Friday it will recall its fleet of 105 autonomous vehicles because they may ​not detect heavy smoke and could impede emergency personnel.",
+                "score": 0.65279555
+              },
+              {
+                "title": "How San Diego helped launch the self-driving car era",
+                "url": "https://www.axios.com/local/san-diego/2026/07/24/1995-self-driving-minivan-pittsburgh-san-diego-demo-97-autonomous-car-history",
+                "source": "axios.com",
+                "summary": "The big picture: This minivan was one of the first demonstrations that self-driving cars were possible. It helped pave the way for some of the autonomous vehicles we see today, Todd Jochem, who worked on the project, told Axios.\n\nDriving the news: Thursday was the 31st anniversary of that drive.\n\n   Jochem has written a book about it, called \"Driven.\"\n\nAlong with finishing the drive in San Diego, the city played another key part in driverless history. [...] Two years later, Jochem and a team from Carnegie Mellon used the HOV lanes on I-15 to run \"Demo '97,\" a demonstration that showed fully autonomous cars and buses driving in realistic traffic scenarios.\n\nFast forward: The technology for driverless cars on highways was 90% of the way there in 1997, Jochem told Axios.",
+                "score": 0.62934244
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_multi_correction_coin",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Người dùng đính chính lại thông tin, agent phải cập nhật coin_id."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Xem giá Bitcoin dùm mình"
+        },
+        {
+          "role": "assistant",
+          "content": "Giá Bitcoin hiện tại là..."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, xem giá Ethereum cơ"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "crypto_price",
+          "args": {
+            "coin_id": "ethereum"
+          },
+          "result": {
+            "coin_id": "ethereum",
+            "currency": "usd",
+            "price": 1901.53,
+            "status": "success"
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_multi_switch_to_timeline",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Chuyển hướng từ tra cứu web chung (lookup) sang xem tweets (timeline)."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm hiểu về Elon Musk trên web xem"
+        },
+        {
+          "role": "assistant",
+          "content": "Elon Musk là..."
+        },
+        {
+          "role": "user",
+          "content": "Thử xem trên Twitter ổng mới đăng gì không"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 5
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "elonmusk",
+            "items": [
+              {
+                "title": "RT @finkd: I wrote about why we believe the future is for everyone. More coming about a positive vision for a world with",
+                "summary": "RT @finkd: I wrote about why we believe the future is for everyone. More coming about a positive vision for a world with superintelligence…",
+                "url": "https://x.com/elonmusk/status/2082273427315171520",
+                "source": "@elonmusk",
+                "date": "Wed Jul 29 01:14:06 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 1658,
+                  "views": "528433"
+                }
+              },
+              {
+                "title": "We’re sending a ship out to recover Starship",
+                "summary": "We’re sending a ship out to recover Starship",
+                "url": "https://x.com/elonmusk/status/2082244164197183805",
+                "source": "@elonmusk",
+                "date": "Tue Jul 28 23:17:49 +0000 2026",
+                "metrics": {
+                  "favorites": 35708,
+                  "retweets": 3675,
+                  "views": "3177649"
+                }
+              },
+              {
+                "title": "Landing videos of Starship",
+                "summary": "Landing videos of Starship",
+                "url": "https://x.com/elonmusk/status/2082244044261064874",
+                "source": "@elonmusk",
+                "date": "Tue Jul 28 23:17:21 +0000 2026",
+                "metrics": {
+                  "favorites": 11352,
+                  "retweets": 1453,
+                  "views": "1974819"
+                }
+              },
+              {
+                "title": "Stayin’ Alive",
+                "summary": "Stayin’ Alive",
+                "url": "https://x.com/elonmusk/status/2082243900719460745",
+                "source": "@elonmusk",
+                "date": "Tue Jul 28 23:16:46 +0000 2026",
+                "metrics": {
+                  "favorites": 17722,
+                  "retweets": 1975,
+                  "views": "1977536"
+                }
+              },
+              {
+                "title": "https://t.co/XneE327cx9",
+                "summary": "https://t.co/XneE327cx9",
+                "url": "https://x.com/elonmusk/status/2082243743013614012",
+                "source": "@elonmusk",
+                "date": "Tue Jul 28 23:16:09 +0000 2026",
+                "metrics": {
+                  "favorites": 34562,
+                  "retweets": 5584,
+                  "views": "3502254"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_multi_confirm_send",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Multi-turn: Dù đã có đủ nội dung ở turn này, agent vẫn phải clarify (yes_no) trước khi thực sự dùng tool send."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi giúp tôi tin nhắn"
+        },
+        {
+          "role": "assistant",
+          "content": "Nội dung tin nhắn là gì bạn nhỉ?"
+        },
+        {
+          "role": "user",
+          "content": "Giá Bitcoin hôm nay tăng mạnh"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có muốn gửi tin nhắn với nội dung \"Giá Bitcoin hôm nay tăng mạnh\" không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có muốn gửi tin nhắn với nội dung \"Giá Bitcoin hôm nay tăng mạnh\" không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có muốn gửi tin nhắn với nội dung \"Giá Bitcoin hôm nay tăng mạnh\" không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    }
+  ]
+}

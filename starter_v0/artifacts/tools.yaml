@@ -9,42 +9,42 @@
 tools:
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Hỏi lại người dùng khi thiếu thông tin quan trọng hoặc để yêu cầu xác nhận. BẮT BUỘC dùng response_type='yes_no' nếu cần xác nhận trước khi gửi/đăng tin."
     parameters:
       type: object
       properties:
         question: {type: string, default: "", description: "Câu hỏi"}
-        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời"}
+        response_type: {type: string, enum: [text, yes_no, choice], default: "text", description: "Kiểu trả lời. Dùng yes_no để xác nhận hành động."}
         options: {type: array, default: [], items: {type: string}, description: "Các lựa chọn"}
-      required: [question]
+      required: [question, response_type]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Lấy các bài đăng (tweets) gần đây của một tài khoản mạng xã hội cụ thể."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
+        screenname: {type: string, default: "", description: "Tên tài khoản (handle)"}
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Tìm bài đăng trên mạng xã hội (Twitter/X) bằng từ khóa. CHỈ DÙNG CHO MẠNG XÃ HỘI, KHÔNG DÙNG TÌM TIN TỨC CHUNG."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Từ khóa"}
+        query: {type: string, default: "", description: "Từ khóa tìm kiếm trên MXH"}
         search_type: {type: string, enum: [Latest, Top], default: "Latest", description: "Cách sắp xếp"}
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tra cứu thông tin, tin tức (news) chung trên web. Dùng khi người dùng tìm tin tức hằng ngày hoặc thông tin web thông thường."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
+        query: {type: string, default: "", description: "Truy vấn tìm kiếm cốt lõi (không bao gồm các từ như 'news' hay 'tin tức')"}
+        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại. Chọn 'news' nếu tìm tin tức."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian (ví dụ 'hôm nay' thì chọn 'day')"}
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 
@@ -78,6 +78,16 @@ tools:
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
+  - name: crypto_price
+    description: "Tra cứu giá hiện tại của tiền điện tử (cryptocurrency) như bitcoin, ethereum, solana, v.v."
+    parameters:
+      type: object
+      properties:
+        coin_id: {type: string, default: "bitcoin", description: "ID của đồng tiền (ví dụ: bitcoin, ethereum)"}
+        currency: {type: string, default: "usd", description: "Đơn vị tiền tệ (ví dụ: usd, vnd)"}
+      required: [coin_id]
+
+
   - name: send
     description: "Gửi một đoạn văn bản đi."
     parameters:

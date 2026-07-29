@@ -1,7 +1,266 @@
 {
-  "dataset_id": "day04_v2_research_group",
-  "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "dataset_id": "eval_group",
+  "dataset_role": "Team 10 Custom Eval Cases",
+  "description": "5 single-turn and 5 multi-turn cases covering crypto_price, core routing, and edge cases.",
+  "cases": [
+    {
+      "id": "G01_crypto_price_usd",
+      "phase": "B",
+      "suite": "group",
+      "input": "Giá ETH hiện tại là bao nhiêu?",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum",
+              "currency": "usd"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng map 'ETH' thành 'ethereum' và gọi tool crypto_price với mặc định 'usd'."
+      }
+    },
+    {
+      "id": "G02_crypto_price_vnd",
+      "phase": "B",
+      "suite": "group",
+      "input": "Cho xin giá Solana tính bằng tiền Việt Nam",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "solana",
+              "currency": "vnd"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng nhận diện đơn vị tiền tệ VND cho tool crypto_price."
+      }
+    },
+    {
+      "id": "G03_social_search_latest",
+      "phase": "B",
+      "suite": "group",
+      "input": "Có ai đang bàn tán về iPhone 16 trên mạng xã hội không? Xem bài mới nhất nhé.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "iPhone 16",
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra social_search với search_type='Latest' theo yêu cầu."
+      }
+    },
+    {
+      "id": "G04_clarify_missing_coin",
+      "phase": "B",
+      "suite": "group",
+      "input": "Giá tiền ảo hôm nay thế nào?",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra xem agent có hỏi lại khi người dùng hỏi giá crypto chung chung mà không nêu rõ đồng nào."
+      }
+    },
+    {
+      "id": "G05_out_of_scope_cooking",
+      "phase": "B",
+      "suite": "group",
+      "input": "Làm thế nào để nấu món phở bò ngon?",
+      "failure_type": "out_of_scope",
+      "expect": {
+        "no_tool": true
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra khả năng từ chối dùng tool khi truy vấn ngoài phạm vi (công thức nấu ăn)."
+      }
+    },
+    {
+      "id": "G06_multi_clarify_crypto",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Giá coin giờ sao rồi?"
+        },
+        {
+          "role": "assistant",
+          "content": "Bạn muốn xem giá của đồng tiền cụ thể nào (ví dụ: Bitcoin, Ethereum)?"
+        },
+        {
+          "role": "user",
+          "content": "Bitcoin nhé"
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "bitcoin"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Cung cấp thông tin sau khi clarify để gọi crypto_price."
+      }
+    },
+    {
+      "id": "G07_multi_carryover_topic",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tin tức AI tháng này có gì hot?"
+        },
+        {
+          "role": "user",
+          "content": "Tập trung vào mảng self-driving cars đi"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "self-driving cars",
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Carryover topic='news' và timeframe='month' từ turn trước sang truy vấn mới."
+      }
+    },
+    {
+      "id": "G08_multi_correction_coin",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Xem giá Bitcoin dùm mình"
+        },
+        {
+          "role": "assistant",
+          "content": "Giá Bitcoin hiện tại là..."
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, xem giá Ethereum cơ"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "crypto_price",
+            "args": {
+              "coin_id": "ethereum"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Người dùng đính chính lại thông tin, agent phải cập nhật coin_id."
+      }
+    },
+    {
+      "id": "G09_multi_switch_to_timeline",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm hiểu về Elon Musk trên web xem"
+        },
+        {
+          "role": "assistant",
+          "content": "Elon Musk là..."
+        },
+        {
+          "role": "user",
+          "content": "Thử xem trên Twitter ổng mới đăng gì không"
+        }
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Chuyển hướng từ tra cứu web chung (lookup) sang xem tweets (timeline)."
+      }
+    },
+    {
+      "id": "G10_multi_confirm_send",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Gửi giúp tôi tin nhắn"
+        },
+        {
+          "role": "assistant",
+          "content": "Nội dung tin nhắn là gì bạn nhỉ?"
+        },
+        {
+          "role": "user",
+          "content": "Giá Bitcoin hôm nay tăng mạnh"
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Multi-turn: Dù đã có đủ nội dung ở turn này, agent vẫn phải clarify (yes_no) trước khi thực sự dùng tool send."
+      }
+    }
+  ]
 }

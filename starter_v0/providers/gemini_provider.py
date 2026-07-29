@@ -73,7 +73,7 @@ class GeminiProvider:
         self,
         *,
         api_key_env: str = "GEMINI_API_KEY",
-        default_model: str = "gemini-2.5-pro",
+        default_model: str = "gemini-2.0-flash",
     ) -> None:
         self.api_key_env = api_key_env
         self.default_model = default_model
@@ -106,11 +106,35 @@ class GeminiProvider:
             config_kwargs["tools"] = [types.Tool(function_declarations=declarations)]
 
         client = genai.Client(api_key=api_key)
-        resp = client.models.generate_content(
-            model=model or self.default_model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
+        
+        max_retries = 7
+        resp = None
+        for attempt in range(max_retries):
+            try:
+                resp = client.models.generate_content(
+                    model=model or self.default_model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                break
+            except Exception as e:
+                import time
+                import re
+                error_msg = str(e)
+                is_rate_limit = any(term in error_msg.lower() for term in ["429", "resourceexhausted", "rate limit", "quota"])
+                if is_rate_limit and attempt < max_retries - 1:
+                    match = re.search(r"Please retry in ([\d\.]+)s", error_msg)
+                    delay = float(match.group(1)) + 1.0 if match else 10.0 * (2 ** attempt)
+                    print(f"\nRate limited (429) from Gemini. Retrying in {delay:.2f}s (Attempt {attempt + 1}/{max_retries})...", flush=True)
+                    time.sleep(delay)
+                elif "503" in error_msg and attempt < max_retries - 1:
+                    delay = 5.0 * (2 ** attempt)
+                    print(f"\nService unavailable (503). Retrying in {delay:.2f}s (Attempt {attempt + 1}/{max_retries})...", flush=True)
+                    time.sleep(delay)
+                else:
+                    if attempt == max_retries - 1 and is_rate_limit:
+                        print(f"\nExhausted all {max_retries} retries for Gemini API.", flush=True)
+                    raise
 
         text_parts: list[str] = []
         calls: list[ToolCall] = []
