@@ -93,13 +93,13 @@ Optional `.env`:
 
 ```env
 BACKEND_SHARED_SECRET=replace-with-a-local-secret
-ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403-git-main-vuvanphong123s-projects.vercel.app
+ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403.vercel.app
 ```
 
 Run locally:
 
 ```powershell
-$env:ALLOWED_ORIGINS="http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403-git-main-vuvanphong123s-projects.vercel.app"
+$env:ALLOWED_ORIGINS="http://localhost:5173,http://127.0.0.1:5173,https://day-04-g35-e403.vercel.app"
 python -m uvicorn server:app --host 127.0.0.1 --port 8000
 ```
 

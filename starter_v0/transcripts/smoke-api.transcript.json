@@ -6,7 +6,7 @@
     {
       "started_at": "2026-07-29T03:48:55+00:00",
       "ended_at": "2026-07-29T03:49:00+00:00",
-      "client": "127.0.0.1",
+      "client": "<redacted>",
       "user": "Ban la gi va lam duoc gi?",
       "status": "answered",
       "assistant_text": "Tôi là một trợ lý nghiên cứu AI được thiết kế để hỗ trợ bạn thực hiện các công việc tìm kiếm và tổng hợp thông tin một cách hiệu quả.\n\nDưới đây là những gì tôi có thể giúp bạn:\n\n1.  **Tìm kiếm thông tin:** Tôi có thể tra cứu tin tức mới nhất, các sự kiện hiện tại hoặc thông tin tổng quát trên web.\n2.  **Nghiên cứu học thuật:** Tôi có thể tìm kiếm các bài báo khoa học, tài liệu nghiên cứu trên arXiv.\n3.  **Theo dõi mạng xã hội:** Tôi có thể cập nhật các thảo luận, xu hướng hoặc các bài đăng từ những tài khoản cụ thể trên mạng xã hội (như Twitter/X).\n4.  **Đọc và tóm tắt:** Tôi có thể đọc nội dung từ các đường dẫn (URL) hoặc các bài báo khoa học mà bạn cung cấp.\n5.  **Quản lý công việc:** Tôi có thể hỗ trợ bạn trong quy trình nghiên cứu, tuân thủ các chính sách về trích dẫn nguồn và xử lý dữ liệu.\n6.  **Định dạng kết quả:** Tôi có thể giúp bạn trình bày, tổng hợp các thông tin đã thu thập được thành các định dạng báo cáo, danh sách hoặc bản tin gọn gàng.\n\n**Cách tôi làm việc:**\n*   Tôi ưu tiên sử dụng các công cụ chuyên biệt cho từng loại yêu cầu (ví dụ: `lookup` cho tin tức, `papers` cho nghiên cứu, `timeline` cho mạng xã hội).\n*   Tôi luôn tuân thủ các chính sách về bảo mật dữ liệu và trích dẫn nguồn tin cậy.\n*   Đối với các hành động gửi tin nhắn hoặc đăng bài (ví dụ qua Telegram), tôi luôn yêu cầu sự xác nhận rõ ràng từ bạn trước khi thực hiện.\n\nBạn có đang cần tìm hiểu về chủ đề nào cụ thể hoặc cần tôi hỗ trợ nghiên cứu vấn đề gì không?",
