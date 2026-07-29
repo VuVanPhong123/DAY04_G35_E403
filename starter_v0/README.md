@@ -1,6 +1,6 @@
 # Day 04 Lab v2 - Research Agent
 
-Research Agent is a Gemini-powered tool-routing agent for web news, URL reading, Twitter/X signals, local company policy, arXiv discovery, arXiv PDF text extraction, and formatting.
+Research Agent is a Gemini-powered tool-routing agent for web news, URL reading, Twitter/X signals, local company policy, arXiv discovery, arXiv PDF text extraction, source-type classification, and formatting.
 
 ## Team Members
 
@@ -45,6 +45,7 @@ React on Vercel
 - `policy`: search local company policy markdown.
 - `papers`: search arXiv.
 - `paper_text`: download and extract text from a specific arXiv paper.
+- `source_quality`: classify a URL/domain as official, academic, news, social, or unknown.
 
 ## Setup
 
