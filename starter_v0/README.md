@@ -8,7 +8,7 @@ Research Agent is a Gemini-powered tool-routing agent for web news, URL reading,
 |---|---|---|
 | Vũ Văn Phong | 2A202601647 | Backend orchestration, Gemini provider, Vercel/ngrok integration |
 | Hà Duy Anh |  | React UI, chat experience, responsive layout |
-| Nguyễn Quang Vinh |  | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
+| Nguyễn Quang Vinh | 2A202601517 | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
 | Hà Lê Minh |  | Eval design, group cases, run analysis |
 | Phạm Sỹ Đức |  | Documentation, deployment guide, report evidence |
 | Đoàn Nhật Nam |  | QA, security review, transcript and smoke testing |
