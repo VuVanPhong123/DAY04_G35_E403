@@ -1,16 +1,4 @@
 # Day 04 Lab v2 — Research Agent Tool Eval
-
-## Team Members
-
-| Member | MSSV | Main Responsibility |
-|---|---|---|
-| Vũ Văn Phong | 2A202601647 | Backend orchestration, Gemini provider, Vercel/ngrok integration |
-| Hà Duy Anh |  | React UI, chat experience, responsive layout |
-| Nguyễn Quang Vinh | 2A202601517 | Tool integration, RapidAPI Twitter, Tavily/Firecrawl checks |
-| Hoàng Lê Minh | 2A202601653 | Eval design, group cases, run analysis |
-| Phạm Sỹ Đức | 2A202601601 | Documentation, deployment guide, report evidence |
-| Đoàn Nhật Nam | 2A202601123 | QA, security review, transcript and smoke testing |
-
 ## Brief
 
 Trong lab này, nhóm build một research agent nhỏ nhưng chạy thật. Agent nhận request của user, chọn tool, truyền arguments, chạy tool thật, lưu full JSON log, rồi dùng log đó để tối ưu prompt/tool declaration qua nhiều version.
